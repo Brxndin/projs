@@ -1,0 +1,10 @@
+Ainda em desenvolvimento
+
+Funciona melhor no Google Chrome
+
+Controles:
+
+Setas: movimentação
+Spacebar: ataque
+
+Feito por Brandon

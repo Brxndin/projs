@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+
+            body{
+
+              background-color: #520a06;
+
+            }
+
+            #p{
+
+                background-color: #368203;
+
+            }
+
+            .i{
+
+                background-color: red;
+
+            }
+
+            .o{
+
+                background-color: brown;
+
+            }
+            
+            .ar{
+              
+              background-color: gray;
+              border: 1px solid black;
+              
+            }
+
+            #mapa{
+
+                background-color: #e8b07b;
+
+            }
+
+        </style>
+    </head>
+    <body>
+        
+        <div id="canvas">
+
+        </div>
+        <script>
+            
+            // gera um numero inteiro pseudoaleatorio
+            function randint(min, max){
+
+                min = Math.ceil(min);
+                max = Math.floor(max + 1);
+
+                return Math.floor(Math.random() * (max - min)) + min;
+
+            }
+
+            var mapa = {
+
+              'x': Math.floor(screen.width/4),
+              'y': Math.floor(screen.height/7),
+              'alt': Math.floor(screen.height * (55.5/100)),
+              'larg': Math.floor(screen.width * (50/100))
+
+            }
+            
+            // coloca os atributos do mapa
+
+            var ma = document.createElement('div');
+            
+            ma.setAttribute('id', 'mapa');
+                
+            ma.style.position = "absolute";
+                
+            ma.style.width = mapa.larg + 'px';
+            ma.style.height = mapa.alt + 'px';
+              
+            ma.style.left = mapa.x + 'px';
+            ma.style.top = mapa.y + 'px';
+
+            m = document.getElementById('canvas');
+
+            m.appendChild(ma);
+            
+            // faz um objeto mudar de posição
+            function andar(obj, d){
+
+                if(d == 'direita'){
+
+                    if((obj.x + obj.larg) < (mapa.x + mapa.larg)){
+
+                        obj.x++;
+                        document.getElementById(obj.id).style.left = obj.x + 'px';
+
+                    }
+
+                }else if(d == 'esquerda'){
+
+                    if(obj.x > mapa.x){
+
+                        obj.x--;
+                        document.getElementById(obj.id).style.left = obj.x + 'px';
+
+                    }
+
+                }else if(d == 'cima'){
+
+                    if(obj.y > mapa.y){
+
+                        obj.y--;
+                        document.getElementById(obj.id).style.top = obj.y + 'px';
+
+                    }
+
+                }else if(d == 'baixo'){
+
+                    if((obj.y + obj.alt) < (mapa.y + mapa.alt)){
+                        
+                        obj.y++;
+                        document.getElementById(obj.id).style.top = obj.y + 'px';
+
+                    }
+
+                }
+
+            }
+            
+            // valida o movimento de um objeto baseado na direção e colisão com outro objeto
+            function movimento(obj1, obj2, d){
+              
+                obj1.face = d;
+
+                var pt1 = {
+
+                    'a': {
+
+                        'x': obj1.x,
+                        'y': obj1.y
+
+                    },
+                    'b': {
+
+                        'x': obj1.x,
+                        'y': obj1.y + obj1.alt
+
+                    },
+                    'c': {
+
+                        'x': obj1.x + obj1.larg,
+                        'y': obj1.y
+
+                    },
+                    'd': {
+
+                        'x': obj1.x + obj1.larg,
+                        'y': obj1.y + obj1.alt
+
+                    }
+
+                }
+
+                var pt2 = {
+
+                    'a': {
+
+                        'x': obj2.x,
+                        'y': obj2.y
+
+                    },
+                    'b': {
+
+                        'x': obj2.x,
+                        'y': obj2.y + obj2.alt
+
+                    },
+                    'c': {
+
+                        'x': obj2.x + obj2.larg,
+                        'y': obj2.y
+
+                    },
+                    'd': {
+
+                        'x': obj2.x + obj2.larg,
+                        'y': obj2.y + obj2.alt
+
+                    }
+
+                }
+
+                if(d == 'direita'){
+
+                    if(pt1.c.x + 1 == pt2.b.x){
+
+                        if(pt1.c.y >= pt2.a.y && pt1.c.y <= pt2.b.y){
+
+                            return false;
+
+                        }else if(pt1.d.y >= pt2.a.y && pt1.d.y <= pt2.b.y){
+
+                            return false;
+
+                        }else if(pt1.c.y <= pt2.a.y && pt1.d.y >= pt2.b.y){
+
+                            return false;
+
+                        }else{
+
+                            return true;
+
+                        }
+
+                    }else{
+
+                        return true;
+
+                    }
+
+                }else if(d == 'esquerda'){
+
+                    if(pt1.b.x - 1 == pt2.c.x){
+
+                        if(pt1.b.y >= pt2.c.y && pt1.b.y <= pt2.d.y){
+
+                            return false;
+
+                        }else if(pt1.a.y >= pt2.c.y && pt1.a.y <= pt2.d.y){
+
+                            return false;
+
+                        }else if(pt1.a.y <= pt2.c.y && pt1.b.y >= pt2.d.y){
+
+                            return false;
+
+                        }else{
+
+                            return true;
+
+                        }
+
+                    }else{
+
+                        return true;
+
+                    }
+
+                }else if(d == 'cima'){
+
+                    if(pt1.a.y - 1 == pt2.b.y){
+
+                        if(pt1.c.x >= pt2.b.x && pt1.c.x <= pt2.d.x){
+
+                            return false;
+
+                        }else if(pt1.a.x >= pt2.b.x && pt1.a.x <= pt2.d.x){
+
+                            return false;
+
+                        }else if(pt1.a.x <= pt2.b.x && pt1.c.x >= pt2.d.x){
+
+                            return false;
+
+                        }else{
+
+                            return true;
+
+                        }
+
+                    }else{
+
+                        return true;
+
+                    }
+
+                }else if(d == 'baixo'){
+
+                    if(pt1.b.y + 1 == pt2.a.y){
+
+                        if(pt1.b.x >= pt2.a.x && pt1.b.x <= pt2.c.x){
+
+                            return false;
+
+                        }else if(pt1.d.x >= pt2.a.x && pt1.d.x <= pt2.c.x){
+
+                            return false;
+
+                        }else if(pt1.b.x <= pt2.a.x && pt1.d.x >= pt2.c.x){
+
+                            return false;
+
+                        }else{
+
+                            return true;
+
+                        }
+
+                    }else{
+
+                        return true;
+
+                    }
+
+                }else{
+
+                    return false;
+
+                }
+
+            }
+
+            var jogador = {
+          
+              'id': 'p',
+              'x': Math.floor(mapa.x + (mapa.larg/2)),
+              'y': Math.floor(mapa.alt - (mapa.y/4)),
+              'alt': 40,
+              'larg': 40,
+              'face': 'direita',
+              'hp': 200,
+              'atq': 50
+              
+            }
+
+            var inimigos = {
+
+            }
+
+            var obstaculos = {
+
+            }
+            
+            // verifica a interação de movimento e colisão entre todos os objetos (jogador, inimigos e obstáculos)
+            function mov_geral(obj, d){
+          
+              var e = true;
+                  
+              for(const i in inimigos){
+                
+                if(obj.id != inimigos[i].id){
+                    
+                  if(!movimento(obj, inimigos[i], d)){
+                        
+                    e = false;
+                        
+                  }
+                
+                }
+                    
+              }
+              
+              for(const i in obstaculos){
+                
+                if(obj.id != obstaculos[i].id){
+                    
+                  if(!movimento(obj, obstaculos[i], d)){
+                        
+                    e = false;
+                        
+                  }
+                
+                }
+                    
+              }
+              
+              if(e){
+                
+                andar(obj, d);
+                
+              }
+              
+            }
+            
+            // verifica se houve colisao entre dois objetos ou se ocupam o mesmo lugar (é mais usado no ataque)
+            function colisao(obj1, obj2){
+          
+              var pt1 = {
+                
+                'a' : {
+                  
+                  'x': obj1.x,
+                  'y': obj1.y
+                  
+                },
+                'b' : {
+                  
+                  'x': obj1.x,
+                  'y': obj1.y + obj1.alt
+                  
+                },
+                'c' : {
+                  
+                  'x': obj1.x + obj1.larg,
+                  'y': obj1.y
+                  
+                },
+                'd' : {
+                  
+                  'x': obj1.x + obj1.larg,
+                  'y': obj1.y + obj1.alt
+                  
+                }
+                
+              }
+              
+              var pt2 = {
+                
+                'a' : {
+                  
+                  'x': obj2.x,
+                  'y': obj2.y
+                  
+                },
+                'b' : {
+                  
+                  'x': obj2.x,
+                  'y': obj2.y + obj2.alt
+                  
+                },
+                'c' : {
+                  
+                  'x': obj2.x + obj2.larg,
+                  'y': obj2.y
+                  
+                },
+                'd' : {
+                  
+                  'x': obj2.x + obj2.larg,
+                  'y': obj2.y + obj2.alt
+                  
+                }
+                
+              }
+              
+              var r;
+              
+              if(pt1.c.x + 1 >= pt2.b.x && pt1.b.x - 1 <= pt2.c.x && pt1.a.y - 1 <= pt2.b.y && pt1.b.y + 1 >= pt2.a.y){
+    
+                r = true;
+                
+              }else{
+                
+                r = false;
+                
+              }
+              
+              return r;
+              
+            }
+            
+            // cria a arma do objeto na tela e verifica se houve colisão com outro objeto e, se houver, diminui a vida desse objeto, removendo-o quando a vida chegar a zero
+            function atacar(obj1, obj2){
+              
+              var arma = {
+                
+              }
+              
+              if(obj1.face == 'esquerda'){
+                
+                arma.x = obj1.x - 25;
+                arma.y = Math.floor(obj1.y + (obj1.alt/2));
+                arma.larg = 25;
+                arma.alt = 5;
+                
+              }else if(obj1.face == 'direita'){
+                
+                arma.x = obj1.x + obj1.larg;
+                arma.y = Math.floor(obj1.y + (obj1.alt/2));
+                arma.larg = 25;
+                arma.alt = 5;
+                
+              }else if(obj1.face == 'cima'){
+                
+                arma.x = Math.floor(obj1.x + (obj1.larg/2));
+                arma.y = obj1.y - 25;
+                arma.larg = 5;
+                arma.alt = 25;
+                
+              }else if(obj1.face == 'baixo'){
+                
+                arma.x = Math.floor(obj1.x + (obj1.larg/2));
+                arma.y = obj1.y + obj1.alt;
+                arma.larg = 5;
+                arma.alt = 25;
+                
+              }
+              
+              var ar = document.createElement('div');
+            
+              ar.setAttribute('class', 'ar');
+                
+              ar.style.position = "absolute";
+                
+              ar.style.width = arma.larg + 'px';
+              ar.style.height = arma.alt + 'px';
+              
+              ar.style.left = arma.x + 'px';
+              ar.style.top = arma.y + 'px';
+                
+              m.appendChild(ar);
+              
+              if(obj2.id == 'p'){
+                
+                if(colisao(arma, obj2)){
+                    
+                  obj2.hp = obj2.hp - obj1.atq;
+                  
+                  s.setAttribute('value', obj2.hp);
+                    
+                }
+                
+                obj1.pa = false;
+              
+                setTimeout(function(){
+                  
+                  ar.remove();
+                  
+                  setTimeout(function(){
+                    
+                    obj1.pa = true;
+                    
+                  }, 300);
+                  
+                }, 40);
+              
+              }else{
+                
+                setTimeout(function(){
+                  
+                  ar.remove();
+                  
+                }, 40);
+              
+                for(const i in inimigos){
+                  
+                  if(colisao(arma, inimigos[i])){
+                    
+                    inimigos[i].hp = inimigos[i].hp - jogador.atq;
+                    
+                    if(inimigos[i].hp <= 0){
+                    
+                      clearInterval(inimigos[i].mov);
+                    
+                      document.getElementById(inimigos[i].id).remove();
+                    
+                      delete inimigos[i];
+                    
+                    }
+                    
+                  }
+                  
+                }
+              
+              }
+              
+            }
+            
+            // inteligência artificial básica para os inimigos
+            function ia(obj){
+
+                if((jogador.x + jogador.larg) < (obj.x - 100) || jogador.x > (obj.x + obj.larg + 100) || (jogador.y + jogador.alt) < (obj.y - 100) || jogador.y > (obj.y + obj.alt + 100)){
+
+                    if(obj.x < (obj.inix + 20) && obj.bool == true){
+
+                        obj.bool = true;
+
+                        mov_geral(obj, 'direita');
+
+                    }else{
+
+                        obj.bool = false;
+
+                    }
+
+                    if(obj.x > (obj.inix - 20) && obj.bool == false){
+
+                        obj.bool = false;
+
+                        mov_geral(obj, 'esquerda');
+
+                    }else{
+
+                        obj.bool = true;
+
+                    }
+
+                }else{
+
+                    if(jogador.x < obj.x){
+
+                      if(movimento(obj, jogador, 'esquerda')){
+                
+                        mov_geral(obj, 'esquerda');
+                      
+                      }else{
+                        
+                        if(obj.pa){
+                          
+                          atacar(obj, jogador);
+                          
+                        }
+                        
+                      }
+
+                    }else if(jogador.x == obj.x){
+
+                    }else{
+
+                      if(movimento(obj, jogador, 'direita')){
+                
+                        mov_geral(obj, 'direita');
+                      
+                      }else{
+                        
+                        if(obj.pa){
+                          
+                          atacar(obj, jogador);
+                          
+                        }
+                        
+                      }
+
+                    }
+
+                    if(jogador.y < obj.y){
+
+                      if(movimento(obj, jogador, 'cima')){
+                
+                        mov_geral(obj, 'cima');
+                        
+                      }else{
+                        
+                        if(obj.pa){
+                          
+                          atacar(obj, jogador);
+                          
+                        }
+                        
+                      }
+
+                    }else if(jogador.y == obj.y){
+
+                    }else{
+
+                      if(movimento(obj, jogador, 'baixo')){
+                
+                        mov_geral(obj, 'baixo');
+                        
+                      }else{
+                        
+                        if(obj.pa){
+                          
+                          atacar(obj, jogador);
+                          
+                        }
+                        
+                      }
+
+                    }
+
+                }
+
+            }
+            
+            // cria os inimigos e coloca no mapa
+            function criar_inimigo(){
+
+                var w = Object.keys(inimigos).length + 1;
+
+                var obj = {
+
+                    'id': 'i' + w,
+                    'bool': true,
+                    'pa': true,
+                    'inix': (mapa.x + 30) * w,
+                    'iniy': (mapa.y + 50) * w,
+                    'x': (mapa.x + 30) * w,
+                    'y': (mapa.y + 50) * w,
+                    'alt': 40,
+                    'larg': 40,
+                    'face': 'direita',
+                    'hp': 200,
+                    'atq': 10
+
+                }
+
+                inimigos['inimigo' + w] = obj;
+
+                var i = document.createElement('div');
+
+                i.setAttribute('id', obj.id);
+                i.setAttribute('class', 'i');
+
+                i.style.position = 'absolute';
+
+                i.style.width = obj.larg + 'px';
+                i.style.height = obj.alt + 'px';
+
+                i.style.left = obj.x + 'px';
+                i.style.top = obj.y + 'px';
+
+                m.appendChild(i);
+
+                inimigos['inimigo' + w].mov = setInterval(function(){
+
+                    ia(inimigos['inimigo' + w]);
+
+                }, 25);
+
+            }
+
+            // cria obstaculos e coloca no mapa
+            function criar_obstaculo(){
+
+                var w = Object.keys(obstaculos).length + 1;
+
+                var obj = {
+
+                    'id': 'o' + w,
+                    'x': (mapa.x + 30) * w,
+                    'y': (mapa.y + 180) * w,
+                    'alt': randint(40, 80),
+                    'larg': randint(40, 80)
+
+                }
+
+                obstaculos['obstaculo' + w] = obj;
+
+                var o = document.createElement('div');
+
+                o.setAttribute('id', obj.id);
+                o.setAttribute('class', 'o');
+
+                o.style.position = 'absolute';
+
+                o.style.width = obj.larg + 'px';
+                o.style.height = obj.alt + 'px';
+
+                o.style.left = obj.x + 'px';
+                o.style.top = obj.y + 'px';
+
+                m.appendChild(o);
+
+            }
+
+            criar_inimigo();
+            criar_inimigo();
+
+            criar_obstaculo();
+
+            // cria personagem e coloca no mapa
+            var p = document.createElement('div');
+            p.setAttribute('id', 'p');
+
+            p.style.position = 'absolute';
+
+            p.style.width = jogador.larg + 'px';
+            p.style.height = jogador.alt + 'px';
+
+            p.style.left = jogador.x + 'px';
+            p.style.top = jogador.y + 'px';
+
+            m.appendChild(p);
+
+            var s = document.createElement('progress');
+
+            s.setAttribute('id', 'p_hp');
+            s.setAttribute('value', jogador.hp);
+            s.setAttribute('max', jogador.hp);
+
+            s.style.position = 'absolute';
+
+            s.style.width = 200 + 'px';
+            s.style.height = 30 + 'px';
+
+            s.style.left = mapa.x + 'px';
+            s.style.top = 70 + 'px';
+
+            m.appendChild(s);
+            
+            var dir = {
+
+                'direita' : false,
+                'esquerda' : false,
+                'cima' : false,
+                'baixo' : false
+
+            }
+
+            // controles do jogador
+            document.addEventListener('keydown', function(event){
+                
+
+                if(event.keyCode == 37){
+
+                    clearInterval(dir['esquerda']);
+
+                    dir['esquerda'] = setInterval(function(){
+
+                        mov_geral(jogador, 'esquerda');
+                        
+
+                    }, 5);
+                        
+                    
+
+                }else if(event.keyCode == 39){
+
+                    clearInterval(dir['direita']);
+
+                    dir['direita'] = setInterval(function(){
+
+                        mov_geral(jogador, 'direita');
+
+                    }, 5);
+
+                }
+                
+
+                if(event.keyCode == 38){
+
+                    clearInterval(dir['cima']);
+
+                    dir['cima'] = setInterval(function(){
+
+                        mov_geral(jogador, 'cima');
+
+                    }, 5);
+
+                }else if(event.keyCode == 40){
+
+                    clearInterval(dir['baixo']);
+
+                    dir['baixo'] = setInterval(function(){
+
+                        mov_geral(jogador, 'baixo');
+
+                    }, 5);
+
+                }
+
+              if(event.keyCode == 32){
+                
+                atacar(jogador, inimigos);
+                
+              }
+
+            });
+
+            document.addEventListener('keyup', function(event){
+
+                if(event.keyCode == 37){
+
+                    clearInterval(dir['esquerda']);
+
+                }else if(event.keyCode == 39){
+
+                    clearInterval(dir['direita']);
+
+                }
+
+
+                if(event.keyCode == 38){
+
+                    clearInterval(dir['cima']);
+
+                }else if(event.keyCode == 40){
+
+                    clearInterval(dir['baixo']);
+
+                }
+
+            });
+
+        </script>
+    </body>
+</html>
