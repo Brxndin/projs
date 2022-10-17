@@ -374,8 +374,7 @@
                 'nome': 'espada_ferro',
                 'texto': 'Espada de Ferro',
                 'poder': 40,
-                'tipo': 'arma',
-                'tipo_atq': 'c'
+                'tipo': 'arma'
                 
               },
               1: {
@@ -391,8 +390,7 @@
                 'nome': 'espada_ouro',
                 'texto': 'Espada Dourada',
                 'poder': 70,
-                'tipo': 'arma',
-                'tipo_atq': 'c'
+                'tipo': 'arma'
                 
               },
               3: {
@@ -418,15 +416,6 @@
                 'poder': 50,
                 'tipo': 'cura'
 
-              },
-              6: {
-
-                'nome': 'arco_madeira',
-                'texto': 'Arco de Madeira',
-                'poder': 40,
-                'tipo': 'arma',
-                'tipo_atq': 'p'
-
               }
               
             }
@@ -441,10 +430,6 @@
             
             var itens = {
               
-            }
-
-            var armas = {
-
             }
             
             // faz um objeto mudar de posição
@@ -930,12 +915,6 @@
                 'quantidade': 1
                 
               }
-
-              if(typeof obj.tipo_atq != 'undefined'){
-                
-                item.tipo_atq = obj.tipo_atq;
-                
-              }
               
               if(typeof jogador.inventario[item.nome] != 'undefined'){
                 
@@ -984,12 +963,6 @@
                 'poder': obj.poder
                 
               }
-
-              if(typeof obj.tipo_atq != 'undefined'){
-                
-                item.tipo_atq = obj.tipo_atq;
-                
-              }
               
               rmv_equip(obj.tipo);
               
@@ -1006,107 +979,77 @@
               }
               
             }
-
-            function criar_arma(atacante){
+            
+            // cria a arma do objeto na tela e verifica se houve colisão com outro objeto e, se houver, diminui a vida desse objeto, removendo-o quando a vida chegar a zero
+            function atacar(obj1, obj2){
               
-              var w = Object.keys(armas).length + 1;
-              
-              var obj = {
-                'id': 'ar' + w
-              }
-
-              if(atacante.face == 'esquerda'){
-                
-                obj.larg = 25;
-                obj.alt = 6;
-                obj.x = atacante.x - obj.larg;
-                obj.y = Math.round(atacante.y + (atacante.alt/2) - (obj.alt/2));
-                
-              }else if(atacante.face == 'direita'){
-                
-                obj.larg = 25;
-                obj.alt = 6;
-                obj.x = atacante.x + atacante.larg;
-                obj.y = Math.round(atacante.y + (atacante.alt/2) - (obj.alt/2));
-                
-              }else if(atacante.face == 'cima'){
-                
-                obj.larg = 6;
-                obj.alt = 25;
-                obj.x = Math.round(atacante.x + (atacante.larg/2) - (obj.larg/2));
-                obj.y = atacante.y - obj.alt;
-                
-              }else if(atacante.face == 'baixo'){
-                
-                obj.larg = 6;
-                obj.alt = 25;
-                obj.x = Math.round(atacante.x + (atacante.larg/2) - (obj.larg/2));
-                obj.y = atacante.y + atacante.alt;
+              var arma = {
                 
               }
               
-              armas['arma' + w] = obj;
+              if(obj1.face == 'esquerda'){
+                
+                arma.larg = 25;
+                arma.alt = 6;
+                arma.x = obj1.x - arma.larg;
+                arma.y = Math.round(obj1.y + (obj1.alt/2) - (arma.alt/2));
+                
+              }else if(obj1.face == 'direita'){
+                
+                arma.larg = 25;
+                arma.alt = 6;
+                arma.x = obj1.x + obj1.larg;
+                arma.y = Math.round(obj1.y + (obj1.alt/2) - (arma.alt/2));
+                
+              }else if(obj1.face == 'cima'){
+                
+                arma.larg = 6;
+                arma.alt = 25;
+                arma.x = Math.round(obj1.x + (obj1.larg/2) - (arma.larg/2));
+                arma.y = obj1.y - arma.alt;
+                
+              }else if(obj1.face == 'baixo'){
+                
+                arma.larg = 6;
+                arma.alt = 25;
+                arma.x = Math.round(obj1.x + (obj1.larg/2) - (arma.larg/2));
+                arma.y = obj1.y + obj1.alt;
+                
+              }
               
-              c.appendChild(criar_tag({
+              var ar = criar_tag({
                 
                 'tp': 'div',
                 'att': {
 
-                  'id': obj.id,
                   'class': 'ar'
 
                 },
                 'style': {
                   
-                  'width': obj.larg + 'px',
-                  'height': obj.alt + 'px',
-                  'left': obj.x + 'px',
-                  'top': obj.y + 'px'
+                  'width': arma.larg + 'px',
+                  'height': arma.alt + 'px',
+                  'left': arma.x + 'px',
+                  'top': arma.y + 'px'
                   
                 }
                 
-              }));
-
-              if(atacante.equipamento.arma.tipo_atq == 'p'){
-
-                armas['arma' + w].mov = setInterval(() => {
-
-                  andar(armas['arma' + w], atacante.face);
-
-                }, 5);
-
-              }
-
-              return 'arma' + w;
-              
-            }
-            
-            // cria a arma do objeto na tela e verifica se houve colisão com outro objeto e, se houver, diminui a vida desse objeto, removendo-o quando a vida chegar a zero
-            function atacar(obj){
-
-              arma_id = criar_arma(obj);
-              console.log(armas[arma_id].id);
-              ar = document.getElementById(armas[arma_id].id);
-              
-              if(obj.id != jogador.id){
+              });
                 
-                if(colisao(armas[arma_id], obj)){
+              c.appendChild(ar);
+              
+              if(obj2.id == 'p'){
+                
+                if(colisao(arma, obj2)){
                     
-                  jogador.hp = Math.round(jogador.hp - ((obj.atq + obj.equipamento.arma.poder) - ((jogador.equipamento.armadura.poder/100) * (obj.atq + obj.equipamento.arma.poder))));
+                  jogador.hp = Math.round(jogador.hp - ((obj1.atq + obj1.equipamento.arma.poder) - ((jogador.equipamento.armadura.poder/100) * (obj1.atq + obj1.equipamento.arma.poder))));
 
                   if(jogador.hp <= 0){
 
                     jogador.hp = 0;
 
-                    if(obj.equipamento.arma.tipo_atq == 'p'){
-
-                      clearInterval(armas[arma_id].mov);
-
-                    }
-
-                    delete armas[arma_id];
-                    ar.remove();
                     reset();
+                    ar.remove();
 
                     alert('Você morreu.');
 
@@ -1118,67 +1061,31 @@
                     
                 }
                 
-                obj.pa = false;
-
-                if(obj.equipamento.arma.tipo_atq == 'p'){
-
+                obj1.pa = false;
+              
+                setTimeout(() => {
+                  
+                  ar.remove();
+                  
                   setTimeout(() => {
                     
-                    clearInterval(armas[arma_id].mov);
-                    delete armas[arma_id];
-                    ar.remove();
+                    obj1.pa = true;
                     
-                    setTimeout(() => {
-                      
-                      obj.pa = true;
-                      
-                    }, 500);
-                    
-                  }, 500);
-
-                }else{
-
-                  setTimeout(() => {
-                    
-                    delete armas[arma_id];
-                    ar.remove();
-                    
-                    setTimeout(() => {
-                      
-                      obj.pa = true;
-                      
-                    }, 300);
-                    
-                  }, 40);
-
-                }
+                  }, 300);
+                  
+                }, 40);
               
               }else{
                 
-                if(obj.equipamento.arma.tipo_atq == 'p'){
-
-                  setTimeout(() => {
-                    
-                    clearInterval(armas[arma_id].mov);
-                    delete armas[arma_id];
-                    ar.remove();
-                    
-                  }, 500);
-
-                }else{
-
-                  setTimeout(() => {
-                    
-                    delete armas[arma_id];
-                    ar.remove();
-                    
-                  }, 40);
-
-                }
+                setTimeout(() => {
+                  
+                  ar.remove();
+                  
+                }, 40);
               
                 for(const i in inimigos){
                   
-                  if(colisao(armas[arma_id], inimigos[i])){
+                  if(colisao(arma, inimigos[i])){
                     
                     inimigos[i].hp = Math.round(inimigos[i].hp - ((jogador.atq + jogador.equipamento.arma.poder) - ((inimigos[i].equipamento.armadura.poder/100) * (jogador.atq + jogador.equipamento.arma.poder))));
                     
@@ -1244,7 +1151,7 @@
                         
                         if(obj.pa){
                           
-                          atacar(obj);
+                          atacar(obj, jogador);
                           
                         }
                         
@@ -1262,7 +1169,7 @@
                         
                         if(obj.pa){
                           
-                          atacar(obj);
+                          atacar(obj, jogador);
                           
                         }
                         
@@ -1280,7 +1187,7 @@
                         
                         if(obj.pa){
                           
-                          atacar(obj);
+                          atacar(obj, jogador);
                           
                         }
                         
@@ -1298,7 +1205,7 @@
                         
                         if(obj.pa){
                           
-                          atacar(obj);
+                          atacar(obj, jogador);
                           
                         }
                         
@@ -1331,8 +1238,7 @@
                         
                       'nome': 'espada_simples',
                       'texto': 'Espada Simples',
-                      'poder': 10,
-                      'tipo_atq': 'c'
+                      'poder': 10
                       
                     },
                     'armadura': {
@@ -1713,8 +1619,7 @@
                     
                     'nome': 'espada_madeira',
                     'texto': 'Espada de Madeira',
-                    'tipo_atq': 'p',
-                    'poder': 70
+                    'poder': 5
                     
                   },
                   'armadura': lista_itens['vazio']
@@ -1809,7 +1714,7 @@
 
                 if(event.keyCode == 32){
                   
-                  atacar(jogador);
+                  atacar(jogador, inimigos);
                   
                 }
 
