@@ -933,7 +933,7 @@
 
               if(typeof obj.tipo_atq != 'undefined'){
                 
-                item.tipo_atq += obj.tipo_atq;
+                item.tipo_atq = obj.tipo_atq;
                 
               }
               
@@ -987,7 +987,7 @@
 
               if(typeof obj.tipo_atq != 'undefined'){
                 
-                item.tipo_atq += obj.tipo_atq;
+                item.tipo_atq = obj.tipo_atq;
                 
               }
               
@@ -1007,9 +1007,12 @@
               
             }
 
+            var contador_arma = 0;
+
             function criar_arma(atacante, o_larg, o_alt){
 
-              var w = Object.keys(armas).length + 1;
+              var w = contador_arma + 1;
+              contador_arma++;
 
               var obj = {
                 'id': 'ar' + w
@@ -1077,44 +1080,49 @@
               var arma_id = criar_arma(obj, 25, 6);
               var ar = document.getElementById(armas[arma_id].id);
 
-              // if(obj.equipamento.arma.tipo_atq == 'd'){
+              //
 
-              //   var projetil_id = criar_arma(obj, 25, 6);
+            //   if(obj.equipamento.arma.tipo_atq == 'd'){
 
-              //   armas[projetil_id].mov = setInterval(() => {
+            //     var projetil_id = criar_arma(obj, 25, 6);
 
-              //     andar(armas[projetil_id], obj.face);
+            //     armas[projetil_id].mov = setInterval(() => {
 
-              //     for(const i in inimigos){
+            //       andar(armas[projetil_id], obj.face);
+
+            //       for(const i in inimigos){
                   
-              //       if(colisao(armas[projetil_id], inimigos[i])){
+            //         if(colisao(armas[projetil_id], inimigos[i])){
                       
-              //         inimigos[i].hp = Math.round(inimigos[i].hp - ((jogador.atq + jogador.equipamento.arma.poder) - ((inimigos[i].equipamento.armadura.poder/100) * (jogador.atq + jogador.equipamento.arma.poder))));
+            //           inimigos[i].hp = Math.round(inimigos[i].hp - ((jogador.atq + jogador.equipamento.arma.poder) - ((inimigos[i].equipamento.armadura.poder/100) * (jogador.atq + jogador.equipamento.arma.poder))));
                       
-              //         if(inimigos[i].hp <= 0){
+            //           if(inimigos[i].hp <= 0){
 
-              //           criar_item(randint(0, 6), inimigos[i].x, inimigos[i].y);
-              //           //criar_item(3);
+            //             criar_item(randint(0, 6), inimigos[i].x, inimigos[i].y);
+            //             //criar_item(3);
                       
-              //           clearInterval(inimigos[i].mov);
+            //             clearInterval(inimigos[i].mov);
                       
-              //           document.getElementById(inimigos[i].id).remove();
+            //             document.getElementById(inimigos[i].id).remove();
                       
-              //           delete inimigos[i];
+            //             delete inimigos[i];
                       
-              //         }
+            //           }
 
-              //         clearInterval(armas[projetil_id].mov);
-              //         delete armas[projetil_id];
-              //         document.getElementById(armas[projetil_id].id).remove();
+            //           clearInterval(armas[projetil_id].mov);
+            //           document.getElementById(armas[projetil_id].id).remove();
+            //           delete armas[projetil_id];
                       
-              //       }
+                      
+            //         }
                     
-              //     }
+            //       }
 
-              //   }, 5);
+            //     }, 5);
 
-              // }
+            //   }
+
+              //
               
               if(obj.id != jogador.id){
                 
@@ -1532,6 +1540,7 @@
               for(const j in armas){
 
                 document.getElementById(armas[j].id).remove();
+                clearInterval(armas[j].mov);
                 delete armas[j];
 
               }
@@ -1713,7 +1722,7 @@
                     'nome': 'espada_madeira',
                     'texto': 'Espada de Madeira',
                     'poder': 5,
-                    'tipo_atq': 'c'
+                    'tipo_atq': 'd'
                     
                   },
                   'armadura': lista_itens['vazio']
