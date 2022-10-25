@@ -1074,7 +1074,6 @@
 
             }
             
-            // cria a arma do objeto na tela e verifica se houve colisão com outro objeto e, se houver, diminui a vida desse objeto, removendo-o quando a vida chegar a zero
             function atacar(obj){
               
               var arma_id = criar_arma(obj, 25, 6);
@@ -1082,16 +1081,21 @@
 
               //
               
-              /*
+              
 
                if(obj.equipamento.arma.tipo_atq == 'd'){
 
                  var projetil_id = criar_arma(obj, 25, 6);
                  var pr = document.getElementById(armas[projetil_id].id);
+                 var face = obj.face;
+                 var pos = {
+                     'x': armas[projetil_id].x,
+                     'y': armas[projetil_id].y
+                 }
 
                  armas[projetil_id].mov = setInterval(() => {
 
-                   andar(armas[projetil_id], obj.face);
+                   andar(armas[projetil_id], face);
 
                    for(const i in inimigos){
                   
@@ -1120,7 +1124,7 @@
                     
                    }
 
-                 }, 5);
+                 }, 0.5);
                  
                  setTimeout(() => {
                    
@@ -1132,11 +1136,11 @@
                      
                    }
                    
-                 }, 500);
+                 }, 1500);
 
                }
                
-               */
+               
 
               //
               
@@ -1755,7 +1759,7 @@
               
               criar_jogador();
               
-              // ad_inv(lista_itens[6]);
+              ad_inv(lista_itens[6]);
               
             }
             
