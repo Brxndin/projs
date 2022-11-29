@@ -23,6 +23,12 @@
 
             }
 
+            .zumbi{
+
+                background-color: lightgreen;
+
+            }
+
             .o{
 
                 background-color: brown;
@@ -429,6 +435,59 @@
                 
               }
               
+            }
+
+            var lista_inimigos = {
+              0: {
+                'nome': 'guerreiro_esquecido',
+                'alt': 40,
+                'larg': 40,
+                'hp': 200,
+                'atq': 10,
+                'class': 'i',
+                'equipamento': {
+                  'arma': {
+                      
+                    'nome': 'espada_simples',
+                    'texto': 'Espada Simples',
+                    'poder': 10,
+                    'tipo_atq': 'c'
+                    
+                  },
+                  'armadura': {
+                      
+                    'nome': 'armadura_simples',
+                    'texto': 'Armadura Simples',
+                    'poder': 10,
+                      
+                  } 
+                }
+              },
+              1: {
+                'nome': 'zumbi',
+                'alt': 40,
+                'larg': 40,
+                'hp': 200,
+                'atq': 10,
+                'class': 'zumbi',
+                'equipamento': {
+                  'arma': {
+                      
+                    'nome': 'espada_simples',
+                    'texto': 'Espada Simples',
+                    'poder': 10,
+                    'tipo_atq': 'c'
+                    
+                  },
+                  'armadura': {
+                      
+                    'nome': 'armadura_simples',
+                    'texto': 'Armadura Simples',
+                    'poder': 10,
+                      
+                  } 
+                }
+              }
             }
 
             var inimigos = {
@@ -1156,6 +1215,9 @@
                     ar.remove();
                     reset();
 
+                    for(const i in jogador.mov){
+                      clearInterval(jogador.mov[i]);
+                    }
                     jogador = {};
 
                     alert('Você morreu.');
@@ -1333,31 +1395,34 @@
 
                 var w = Object.keys(inimigos).length + 1;
 
+                var ini = lista_inimigos[randint(0, 1)];
+
                 var obj = {
 
                   'id': 'i' + w,
                   'bool': true,
                   'pa': true,
-                  'alt': 40,
-                  'larg': 40,
                   'face': 'direita',
-                  'hp': 200,
-                  'atq': 10,
+                  'alt': ini.alt,
+                  'larg': ini.larg,
+                  'hp': ini.hp,
+                  'atq': ini.atq,
+                  'class': ini.class,
                   'equipamento': {
                       
                     'arma': {
                         
-                      'nome': 'espada_simples',
-                      'texto': 'Espada Simples',
-                      'poder': 10
+                      'nome': ini.equipamento.arma.nome,
+                      'texto': ini.equipamento.arma.texto,
+                      'poder': ini.equipamento.arma.poder
                       
                     },
                     'armadura': {
                         
-                      'nome': 'armadura_simples',
-                      'texto': 'Armadura Simples',
-                      'poder': 10,
-                      'tipo_atq': 'c'
+                      'nome': ini.equipamento.armadura.nome,
+                      'texto': ini.equipamento.armadura.texto,
+                      'poder': ini.equipamento.armadura.poder,
+                      'tipo_atq': ini.equipamento.armadura.tipo_atq
                         
                     }
                       
@@ -1412,7 +1477,7 @@
                   'att': {
 
                     'id': obj.id,
-                    'class': 'i'
+                    'class': obj.class
 
                   },
                   'style': {
@@ -1420,7 +1485,7 @@
                     'width': obj.larg + 'px',
                     'height': obj.alt + 'px',
                     'left': obj.x + 'px',
-                    'top': obj.y + 'px'
+                    'top': obj.y + 'px',
 
                   }
 
